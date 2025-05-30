@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
 import click
 import logging
-from pathlib import Path
+from pathlib import Path # Recomendado ao ter que rodar esse mesmo código em diferentes OS
 import pandas as pd
 from datasets import load_dataset
 from dotenv import find_dotenv, load_dotenv
-from datasets.utils.logging import set_verbosity, INFO
-set_verbosity(INFO)
-
 
 @click.command()
 @click.argument('input_filepath', type=click.Path(exists=True))
@@ -21,6 +17,7 @@ def main(input_filepath, output_filepath):
     logger.info('Carregando dataset através do hugging face')
     df = load_dataset('ag_news')
 
+    # Path(input_filepath).__truediv__('raw_data.csv')
     input_file = Path(input_filepath) / 'raw_data.csv'
     logger.info(f'Dataset cru salvo em {input_file}')
     full_df = pd.concat([pd.DataFrame(df[split]) for split in df], ignore_index=True)
@@ -40,7 +37,7 @@ if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
 
-    # not used in this stub but often useful for finding various files
+    # Retorna a raiz do pro
     project_dir = Path(__file__).resolve().parents[2]
 
     # find .env automagically by walking up directories until it's found, then
