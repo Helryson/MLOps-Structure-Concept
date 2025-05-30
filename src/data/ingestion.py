@@ -6,31 +6,31 @@ from datasets import load_dataset
 from dotenv import find_dotenv, load_dotenv
 
 @click.command()
-@click.argument('input_filepath', type=click.Path(exists=True))
-@click.argument('output_filepath', type=click.Path())
-def main(input_filepath, output_filepath):
+@click.argument('output_filepath', type=click.Path(exists=True))
+def main(output_filepath):
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
     logger = logging.getLogger(__name__)
 
-    logger.info('Carregando dataset através do hugging face')
+    logger.info('Carregando dataset através do huggingface')
     df = load_dataset('ag_news')
 
-    # Path(input_filepath).__truediv__('raw_data.csv')
-    input_file = Path(input_filepath) / 'raw_data.csv'
-    logger.info(f'Dataset cru salvo em {input_file}')
+    logger.info(f'Dataset carregado. Salvando dados em {input_file}')
+    # Path(output_filepath).__truediv__('raw_data.csv')
+    input_file = Path(output_filepath) / 'raw_data.csv'
     full_df = pd.concat([pd.DataFrame(df[split]) for split in df], ignore_index=True)
     full_df.to_csv(input_file, index=False)
+    logger.info('Raw dataset salvo.')
 
-    logger.info('Processando dataset')
-    train_df = pd.DataFrame(df['train'])
-    train_df = train_df[['text', 'label']]
+    # logger.info('Processando dataset')
+    # train_df = pd.DataFrame(df['train'])
+    # train_df = train_df[['text', 'label']]
 
-    output_file = Path(output_filepath) / 'train_data.csv'
-    train_df.to_csv(output_file, index=False)
+    # output_file = Path(output_filepath) / 'train_data.csv'
+    # train_df.to_csv(output_file, index=False)
 
-    logger.info(f'Dados processados salvos em {output_file}')
+    # logger.info(f'Dados processados salvos em {output_file}')
 
 
 if __name__ == '__main__':
