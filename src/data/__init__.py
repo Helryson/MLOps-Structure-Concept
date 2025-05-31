@@ -1,42 +1,36 @@
-import click
-import logging
-from pathlib import Path # Recomendado ao ter que rodar esse mesmo código em diferentes OS
 import pandas as pd
-from datasets import load_dataset
-from dotenv import find_dotenv, load_dotenv
-import cleaning
-import build_features
-import labeling, splitting
+from src.data import build_features, labeling, splitting, cleaning, ingestion
 
-@click.command()
-@click.argument('input_filepath', type=click.Path(exists=True))
-def main(input_filepath):
+def load_and_process_data(output_raw_path, logger):
+    """
+    Carrega, limpa, rotula, divide e extrai features dos dados.
 
-    logger = logging.getLogger(__name__)
+    Args:
+        output_raw_path (str or Path): caminho da pasta com dados brutos.
+        logger (logging.Logger): logger para mensagens.
 
-    df = pd.read_csv(input_filepath)
+    Returns:
+        X_train_vec, X_test_vec, y_train, y_test, vectorizer
+    """
 
-    df[['cleaned_text', 'tokens_lematizados', 'tokens']] = df['text'].apply(cleaning.limpar_texto).apply(pd.Series)
+    logger.info("Carregando os dados...")
+    df = ingestion.save_load_data(output_raw_path, logger)
+
+    logger.info("Limpando e tokenizando textos...")
+    df = cleaning.limpar_texto(df)
+
+    logger.info("Mapeando os rótulos...")
     df = labeling.map_label(df)
+
     X = df['cleaned_text']
     y = labeling.encode(df)
 
-    X_train, X_teste, y_train, y_teste = splitting.split_text(X, y, test_size=0.3)
+    logger.info("Dividindo os dados em treino e teste...")
+    X_train, X_test, y_train, y_test = splitting.split_text(X, y, test_size=0.3)
 
+    logger.info("Extraindo features do texto...")
     X_train_vec, vectorizer = build_features.extract_features(X_train)
-    X_teste_vec = vectorizer.transform(X_teste)
+    X_test_vec = vectorizer.transform(X_test)
 
-
-
-if __name__ == '__main__':
-    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=log_fmt)
-
-    # Retorna a raiz do pro
-    project_dir = Path(__file__).resolve().parents[2]
-
-    # find .env automagically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
-
-    main()
+    logger.info("Dados prontos para treinamento.")
+    return X_train_vec, X_test_vec, y_train, y_test, vectorizer
