@@ -6,6 +6,7 @@ import spacy
 
 nltk.download('punkt_tab')
 nltk.download('stopwords')
+nlp = spacy.load('en_core_web_sm')
 
 def limpar_texto(texto):
     texto = texto.lower()
@@ -13,10 +14,9 @@ def limpar_texto(texto):
     tokens = word_tokenize(texto)
     tokens_filtrados = [token for token in tokens if token not in stopwords.words('english')]
     tokens_lematizados = lematizar(tokens_filtrados)
-    return tokens_lematizados
+    return ' '.join(tokens_lematizados), tokens_lematizados, tokens
 
 def lematizar(tokens):
-    nlp = spacy.load('en_core_web_sm')
     doc = nlp(' '. join(tokens))
     lemmas = [token.lemma_ for token in doc]
     return lemmas
