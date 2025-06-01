@@ -1,7 +1,7 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
 
-def extract_features(df):
+def extract_features(cleaned_text_train):
 
     vectorizer = TfidfVectorizer()
-    return vectorizer.fit_transform(df['cleaned_text']), vectorizer
+    return vectorizer.fit_transform(cleaned_text_train), vectorizer

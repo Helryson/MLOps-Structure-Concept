@@ -33,4 +33,4 @@ def load_and_process_data(output_raw_path, logger):
     X_test_vec = vectorizer.transform(X_test)
 
     logger.info("Dados prontos para treinamento.")
-    return X_train_vec, X_test_vec, y_train, y_test, vectorizer
+    return X_train_vec, X_test_vec, y_train, y_test
