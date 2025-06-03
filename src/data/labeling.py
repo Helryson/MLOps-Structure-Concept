@@ -1,11 +1,13 @@
 import pandas as pd
 from tensorflow.keras.utils import to_categorical
+import joblib
 
 def map_label(df):
     '''Faz o mapeamento de cada label dentro do dataframe para seu respectivo texto'''
 
     label_map = {0: 'World', 1: 'Sports', 2: 'Business', 3: 'Sci/Tech'}
     df['mapped_label'] = df['label'].map(label_map)
+    joblib.dump(df, 'data/interim/interim_data.csv')
     return df
 
 def encode(df, num_classes=4):

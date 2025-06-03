@@ -14,8 +14,6 @@ def save_load_data(output_raw_path, logger):
     Retorna:
     - DataFrame com todos os dados unidos
     """
-
-    logger.info('Carregando dataset através do huggingface')
     dataset = load_dataset('ag_news')
 
     # Junta os splits train/test em um único DataFrame
@@ -24,6 +22,5 @@ def save_load_data(output_raw_path, logger):
     output_file = Path(output_raw_path) / 'raw_data.csv'
     logger.info(f'Dataset carregado. Salvando dados em: {output_file}')
     full_df.to_csv(output_file, index=False)
-    logger.info('Raw dataset salvo com sucesso!')
 
     return full_df

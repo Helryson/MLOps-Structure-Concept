@@ -1,8 +1,12 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-import pandas as pd
+import joblib
 
-def extract_features(cleaned_text_train):
+def extract_features(X_train, X_test):
 
     #Definindo max features para que não pese a memoria ram. Treinamento de modelos pesam mais conforme o número de colunas(features)
     vectorizer = TfidfVectorizer(max_features=5000)
-    return vectorizer.fit_transform(cleaned_text_train), vectorizer
+    X_train_vec = vectorizer.fit_transform(X_train)
+    X_test_vec = vectorizer.transform(X_test)
+    
+    joblib.dump(X_train_vec, 'data/processed/X_train_vec.pkl')
+    joblib.dump(X_test_vec, 'data/processed/X_test_vec.pkl')
