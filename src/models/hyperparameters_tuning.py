@@ -6,10 +6,8 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 
-# Carrega os dados
 X_train_vec, y_train = load_train_data()
 
-# Certifique-se de que y_train está one-hot encoded
 if y_train.ndim == 1 or y_train.shape[1] == 1:
     y_train = to_categorical(y_train)
 
@@ -22,7 +20,6 @@ def create_model(X_train_vec, y_train, learning_rate=0.01):
                   metrics=['accuracy'])
     return model
 
-# Hiperparâmetros para testar
 epochs_list = [10, 20]
 learning_rates = [0.001, 0.01]
 kfold = KFold(n_splits=3, shuffle=True, random_state=42)
@@ -30,7 +27,6 @@ kfold = KFold(n_splits=3, shuffle=True, random_state=42)
 best_score = 0
 best_params = {}
 
-# Loop manual de busca
 for epochs in epochs_list:
     for lr in learning_rates:
         scores = []

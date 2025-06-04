@@ -3,13 +3,15 @@
 import logging
 import click
 from tensorflow.keras.models import load_model # type: ignore
+from sklearn.metrics import accuracy_score
+import numpy as np
 
 from src.models import (
     load_train_data,
     load_test_data,
     create_model,
     train_model,
-    evaluate_model
+    predict_model
 )
 
 log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -38,9 +40,12 @@ def main(output_model_path):
     trained_model = load_model(output_model)
 
     logger.info("Avaliando modelo...")
-    score = evaluate_model(trained_model, X_test_vec, y_test)
+    y_pred = predict_model(trained_model, X_test_vec)
+    y_test_labels = np.argmax(y_test, axis=1)
+    y_pred_labels = np.argmax(y_pred, axis=1)
+    acc = accuracy_score(y_test_labels, y_pred_labels)
 
-    print(f'Accuracy: {score}')
+    print(f'Accuracy: {acc}')
 
     logger.info("Pipeline rodada com sucesso!")
 
