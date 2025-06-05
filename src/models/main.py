@@ -17,8 +17,8 @@ from src.models import (
 log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
 @click.command()
-@click.argument('output_model_path', type=click.Path(exists=True))
-def main(output_model_path):
+@click.argument('output_model_dir', type=click.Path(exists=True))
+def main(output_model_dir):
     """Executa pipeline de processamento dos dados."""
 
     logging.basicConfig(level=logging.INFO, format=log_fmt)
@@ -30,14 +30,14 @@ def main(output_model_path):
     logger.info("Carregando dados de teste...")
     X_test_vec, y_test = load_test_data()
 
-    logger.info("Carregando modelo...")
+    logger.info("Criando modelo...")
     model = create_model(X_train_vec, y_train)
 
-    logger.info("Treinando modelo...")
-    output_model = train_model(model, X_train_vec, y_train, output_model_path)
-    logger.info(f'Modelo salvo em {output_model}')
+    logger.info("Executando treinamento...")
+    output_model_path = train_model(model, X_train_vec, y_train, output_model_dir)
+    logger.info(f'Modelo treinado salvo em {output_model_path}')
 
-    trained_model = load_model(output_model)
+    trained_model = load_model(output_model_path)
 
     logger.info("Avaliando modelo...")
     y_pred = predict_model(trained_model, X_test_vec)
@@ -48,6 +48,28 @@ def main(output_model_path):
     print(f'Accuracy: {acc}')
 
     logger.info("Pipeline rodada com sucesso!")
+
+
+    import mlflow
+    import mlflow.keras
+    from mlflow.models.signature import infer_signature
+    
+    mlflow.set_tracking_uri("http://localhost:5000")
+    mlflow.set_experiment("teste")
+
+    with mlflow.start_run():
+
+        input_example = X_train_vec[:5]
+        signature = infer_signature(input_example, trained_model.predict(input_example))
+
+        mlflow.log_param("epochs", 10)
+        mlflow.log_param("batch_size", 32)
+        mlflow.log_param("vectorizer", "TF-IDF")
+
+        mlflow.log_metric("accuracy", acc)
+
+        mlflow.keras.log_model(trained_model, "model", signature=signature)
+
 
 if __name__ == '__main__':
     main()
