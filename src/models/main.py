@@ -5,6 +5,9 @@ import click
 from tensorflow.keras.models import load_model # type: ignore
 from sklearn.metrics import accuracy_score
 import numpy as np
+import mlflow
+import mlflow.keras
+from mlflow.models.signature import infer_signature
 
 from src.models import (
     load_train_data,
@@ -46,13 +49,6 @@ def main(output_model_dir):
     acc = accuracy_score(y_test_labels, y_pred_labels)
 
     print(f'Accuracy: {acc}')
-
-    logger.info("Pipeline rodada com sucesso!")
-
-
-    import mlflow
-    import mlflow.keras
-    from mlflow.models.signature import infer_signature
     
     mlflow.set_tracking_uri("http://localhost:5000")
     mlflow.set_experiment("teste")
@@ -63,12 +59,16 @@ def main(output_model_dir):
         signature = infer_signature(input_example, trained_model.predict(input_example))
 
         mlflow.log_param("epochs", 10)
-        mlflow.log_param("batch_size", 32)
         mlflow.log_param("vectorizer", "TF-IDF")
-
+        mlflow.log_param("learning_rate", 0.01)
+        mlflow.log_param("activation_hidden", "relu")
+        mlflow.log_param("activation_output", "softmax")
+        mlflow.log_param('loss', 'categorical_crossentropy')
         mlflow.log_metric("accuracy", acc)
 
         mlflow.keras.log_model(trained_model, "model", signature=signature)
+
+    logger.info("Métricas do modelo disponível em http://localhost:5000")
 
 
 if __name__ == '__main__':

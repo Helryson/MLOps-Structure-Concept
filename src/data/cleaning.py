@@ -1,5 +1,4 @@
 import re
-import pandas as pd
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import nltk

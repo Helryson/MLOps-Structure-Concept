@@ -21,6 +21,6 @@ def save_load_data(output_raw_path, logger):
 
     output_file = Path(output_raw_path) / 'raw_data.csv'
     logger.info(f'Dataset carregado. Salvando dados em: {output_file}')
-    full_df.to_csv(output_file, index=False)
+    full_df.to_csv(output_file, encoding='utf-8', index=False)
 
     return full_df
