@@ -2,6 +2,7 @@
 
 import logging
 import click
+from data.database.connection import PostgresDB
 
 from src.data import (
     save_load_data,
@@ -19,6 +20,11 @@ log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 def main(output_raw_path):
     """Executa pipeline de processamento dos dados."""
 
+    db = PostgresDB()
+
+    conn = db.conectar()
+    db.criar_tabela()
+
     logging.basicConfig(level=logging.INFO, format=log_fmt)
     logger = logging.getLogger(__name__)
 
@@ -31,6 +37,8 @@ def main(output_raw_path):
 
     logger.info("Mapeando os rótulos...")
     df = map_label(df)
+
+    db.inserir_dados(df, conn)
 
     X = df['cleaned_text']
     y = encode(df)
