@@ -1,5 +1,3 @@
-# src/data/__init__.py
-
 from .ingestion import save_load_data
 from .cleaning import limpar_texto
 from .labeling import map_label, encode

@@ -7,6 +7,7 @@ load_dotenv()
 
 class PostgresDB:
     def __init__(self):
+        # Lê configurações do banco de variáveis de ambiente
         self.config = {
             'host': os.getenv("DB_HOST"),
             'port': os.getenv("DB_PORT"),
@@ -17,6 +18,7 @@ class PostgresDB:
         self.conn = None
 
     def conectar(self):
+        # Estabelece conexão com o banco PostgreSQL
         try:
             self.conn = psycopg2.connect(**self.config)
             print("Conexão estabelecida com sucesso.")
@@ -25,6 +27,7 @@ class PostgresDB:
             self.conn = None
 
     def criar_tabela(self):
+        # Cria tabela 'noticias_processadas' se não existir
         if self.conn is None:
             print("Conexão não estabelecida.")
             return
@@ -48,7 +51,7 @@ class PostgresDB:
             print("Erro ao criar tabela:", e)
             
     def inserir_dados(self, df, conn):
-
+        # Insere registros do DataFrame no banco, validando colunas necessárias
         colunas_esperadas = [
             'text', 'label', 'tokens', 'tokens_lematizados',
             'cleaned_text', 'mapped_label'
@@ -81,9 +84,11 @@ class PostgresDB:
             self.conn.rollback()
         
         finally:
+            # Fecha a conexão após inserção
             self.fechar_conexao()
 
     def fechar_conexao(self):
+        # Encerra a conexão com o banco, se aberta
         if self.conn:
             self.conn.close()
             print("Conexão encerrada.")
