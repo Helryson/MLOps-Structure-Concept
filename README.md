@@ -1,64 +1,57 @@
-MLOps-studies
-==============================
+# MLOps Structure Concept
 
-Studies about the MLOps code structure
+Este repositório apresenta uma estrutura modular e escalável para projetos de **MLOps** com Python, organizando as etapas de ingestão de dados, treinamento de modelos, e visualização de resultados.
 
-Project Organization
-------------
+A estrutura é pensada para facilitar a manutenção, a reprodutibilidade e a implementação de boas práticas no ciclo de vida de Machine Learning.
+
+---
+
+## Estrutura de Pastas
 
 ```
-mlops_structure/
-├── LICENSE     
-├── README.md                  
-├── Makefile                     # Makefile with commands like `make data` or `make train`                   
-├── configs                      # Config files (models and training hyperparameters)
-│   └── model1.yaml              
-│
-├── data                         
-│   ├── external                 # Data from third party sources.
-│   ├── interim                  # Intermediate data that has been transformed.
-│   ├── processed                # The final, canonical data sets for modeling.
-│   └── raw                      # The original, immutable data dump.
-│
-├── docs                         # Project documentation.
-│
-├── models                       # Trained and serialized models.
-│
-├── notebooks                    # Jupyter notebooks.
-│
-├── references                   # Data dictionaries, manuals, and all other explanatory materials.
-│
-├── reports                      # Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures                  # Generated graphics and figures to be used in reporting.
-│
-├── requirements.txt             # The requirements file for reproducing the analysis environment.
-└── src                          # Source code for use in this project.
-    ├── __init__.py              # Makes src a Python module.
-    │
-    ├── data                     # Data engineering scripts.
-    │   ├── build_features.py    
-    │   ├── cleaning.py          
-    │   ├── ingestion.py         
-    │   ├── labeling.py          
-    │   ├── splitting.py         
-    │   └── validation.py        
-    │
-    ├── models                   # ML model engineering (a folder for each model).
-    │   └── model1      
-    │       ├── dataloader.py    
-    │       ├── hyperparameters_tuning.py 
-    │       ├── model.py         
-    │       ├── predict.py       
-    │       ├── preprocessing.py 
-    │       └── train.py         
-    │
-    └── visualization        # Scripts to create exploratory and results oriented visualizations.
-        ├── evaluation.py        
-        └── exploration.py       
+MLOps-Structure-Concept/
+├── data/ # Armazena os dados brutos e processados
+│ └── raw/
+├── models/ # Modelos treinados e artefatos
+├── notebooks/ # Jupyter notebooks para exploração
+├── src/ # Código-fonte principal
+│ ├── data/ # Pré-processamento de dados
+│ ├── models/ # Treinamento e avaliação de modelos
+│ └── visualization/ # Visualização dos resultados
+├── requirements.txt # Dependências do projeto
+└── README.md # Documentação
+```
+---
+
+## Pré-requisitos
+
+Antes de executar os módulos, crie e ative um ambiente virtual (recomendado) e instale as dependências:
+
+```
+pip install -r requirements.txt
 ```
 
 
---------
-<p><small>Project based on the <a target="_blank" href="https://github.com/Chim-SO/cookiecutter-mlops/">cookiecutter MLOps project template</a>
-that is originally based on <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. 
-#cookiecuttermlops #cookiecutterdatascience</small></p>
+## Execução dos Módulos
+A execução dos módulos pode ser feita diretamente da raiz do projeto.
+
+#Todos os comandos devem ser executados a partir da raiz (MLOps-Structure-Concept/)
+Certifique-se de que os diretórios src/ e subpastas contenham arquivos __init__.py.
+
+### 1. Processamento de Dados
+python3 -m src.data.main data/raw/
+Função: Realiza o carregamento e processamento inicial dos dados.
+
+Argumento: Caminho para o diretório contendo os dados brutos.
+
+### 2. Treinamento de Modelos
+python3 -m src.models.main models/
+Função: Treina os modelos e salva os artefatos no diretório indicado.
+
+Argumento: Caminho onde os modelos treinados serão armazenados.
+
+### 3. Visualização de Resultados
+python3 -m src.visualization.evaluation
+Função: Gera visualizações e métricas dos modelos previamente treinados.
+
+Argumento: Nenhum.
