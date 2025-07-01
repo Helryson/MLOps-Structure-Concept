@@ -35,23 +35,29 @@ pip install -r requirements.txt
 ## Execução dos Módulos
 A execução dos módulos pode ser feita diretamente da raiz do projeto.
 
-#Todos os comandos devem ser executados a partir da raiz (MLOps-Structure-Concept/)
+#### Todos os comandos devem ser executados a partir da raiz (MLOps-Structure-Concept/)
 Certifique-se de que os diretórios src/ e subpastas contenham arquivos __init__.py.
 
 ### 1. Processamento de Dados
+```
 python3 -m src.data.main data/raw/
+```
 Função: Realiza o carregamento e processamento inicial dos dados.
 
 Argumento: Caminho para o diretório contendo os dados brutos.
 
 ### 2. Treinamento de Modelos
+```
 python3 -m src.models.main models/
+```
 Função: Treina os modelos e salva os artefatos no diretório indicado.
 
 Argumento: Caminho onde os modelos treinados serão armazenados.
 
 ### 3. Visualização de Resultados
+```
 python3 -m src.visualization.evaluation
+```
 Função: Gera visualizações e métricas dos modelos previamente treinados.
 
 Argumento: Nenhum.
